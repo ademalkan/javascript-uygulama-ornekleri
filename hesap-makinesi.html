@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hesap Makinesi</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <div id="hesapMakinesi">
+        <table border="1">
+            <tr>
+                <td colspan="5" class="islem"></td>
+            </tr>           
+            <tr>
+                <td colspan="5" class="goster">0</td>
+            </tr>
+            <tr>
+                <td class="btn btnRakam">7</td>
+                <td class="btn btnRakam">8</td>
+                <td class="btn btnRakam">9</td>
+                <td class="btn btnOpt">/</td>
+                <td class="btn btnCE">CE</td>
+            </tr>
+            <tr>
+                <td class="btn btnRakam">4</td>
+                <td class="btn btnRakam">5</td>
+                <td class="btn btnRakam">6</td>
+                <td class="btn btnOpt">*</td>
+                <td class="btn btnC">C</td>
+            </tr>
+            <tr>
+                <td class="btn btnRakam">1</td>
+                <td class="btn btnRakam">2</td>
+                <td class="btn btnRakam">3</td>
+                <td class="btn btnOpt">-</td>
+                <td rowspan="2" class="btn btnEsit">=</td>
+            </tr>           
+            <tr>
+                <td colspan="3" class="btn btnRakam">0</td>
+                <td class="btn btnOpt">+</td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+<style type="text/css">
+    #hesapMakinesi {
+        width: 360px;
+        margin: 10% auto;
+    }
+    table {
+        background: #efefef;
+        border-spacing: 10px;
+        text-align: center;
+    }
+    table .btn {
+        width: 60px;
+        background-color: gray;
+        text-align: center;
+        line-height: 60px;
+        color: #fff;
+        font-size: 1.5em;
+    }
+    .islem, .goster {
+        padding: 5px;
+        text-align: right;
+    }
+    .islem {
+        background: #aaa;
+    }
+    .goster {
+        height: 60px;
+        background: #ddfafa;
+        color: #333;
+        font-size: 1.8em;
+        text-align: right;
+        line-height: 40px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+</style>
+<script type="text/javascript">
+    // genel değişkenler
+    var optDurum = false,opt="",sonuc=0;
+
+    // nesnelerin oluşturulması
+    var btnRakam = document.querySelectorAll(".btnRakam"); // rakamlar
+    var goster = document.querySelector(".goster"); // gösterge paneli
+    var btnOpt = document.querySelectorAll(".btnOpt"); // işlem butonları
+    var islem = document.querySelector(".islem");
+    var btnCE = document.querySelector(".btnCE");
+    var btnEsit = document.querySelector(".btnEsit");
+    var btnC = document.querySelector(".btnC");
+
+    // butona basılma kontrolu
+    btnRakam.forEach(function(element){
+        element.onclick = function(e){
+            // baştaki 0 değerini kaldırma ve opt kontrol işlemi
+            if (goster.textContent=="0" || optDurum)
+                goster.textContent="";
+            // text nesnesini okuyoruz
+            goster.textContent+=this.textContent;
+            optDurum = false; // +-*/ gibi işemler yapıldıysa text kutusunun sıfırlanması gerekiyor
+
+        }
+
+    });
+
+    btnOpt.forEach(function(element){
+        element.onclick = function(e){
+            optDurum = true;
+            var yeniOpt = this.textContent;
+
+            // islem paneli
+            islem.textContent=islem.textContent+" "+goster.textContent+" "+yeniOpt;
+
+            // goster paneli
+            switch(opt) // hafızadaki opt
+            {
+                case "+":goster.textContent=(sonuc +Number(goster.textContent));break;
+                case "-":goster.textContent=(sonuc -Number(goster.textContent));break;
+                case "*":goster.textContent=(sonuc *Number(goster.textContent));break;
+                case "/":goster.textContent=(sonuc /Number(goster.textContent));break;
+                default:break;
+
+            }
+            sonuc = Number(goster.textContent);
+            opt = yeniOpt;
+        }
+    });
+    btnC.onclick = function(e){
+        goster.textContent="0";
+    }   
+    btnCE.onclick = function(e){
+        goster.textContent="0";
+        islem.textContent="";
+        sonuc=0;
+        opt="";
+    }
+    btnEsit.onclick = function(e)
+    {
+        islem.textContent="";
+        optDurum=true;
+        switch(opt) // hafızadaki opt
+        {
+            case "+":goster.textContent=(sonuc +Number(goster.textContent));break;
+            case "-":goster.textContent=(sonuc -Number(goster.textContent));break;
+            case "*":goster.textContent=(sonuc *Number(goster.textContent));break;
+            case "/":goster.textContent=(sonuc /Number(goster.textContent));break;
+            default:break;
+
+        }
+        sonuc = Number(goster.textContent);
+        goster.textContent=sonuc;
+        sonuc=0;
+        opt="";
+    }
+</script>
+</html>
